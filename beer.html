@@ -176,6 +176,10 @@ var parseEntries = app.controller('listCtrl', function($scope, $interval) {
 	};
 
 	$scope.prettyTimePrint = function(hour) {
+		if (hour == -1) {
+			return "CLOSED";
+		}
+
 		if (hour == 0) {
 			return ($scope.timeMode) ? "12:00 AM" : "00:00";
 		}
