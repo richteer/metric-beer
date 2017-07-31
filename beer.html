@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.5/sandstone/bootstrap.min.css">
+
+<style>
+
+</style>
+
+<title>Beer! 🍺 </title>
+<body>
+
+<div class="container">
+<div ng-app="beer" ng-controller="listCtrl">
+
+<div class="row">
+	<div class="col" >
+	<a href="https://www.google.com/maps/dir/Austin+Beerworks,+Industrial+Terrace,+Austin,+TX/Adelbert's+Brewery,+Rutland+Drive,+Austin,+TX/Celis+Brewery,+Metric+Boulevard,+Austin,+TX/Oskar+Blues+Brewery+Austin,+Metric+Boulevard,+Austin,+TX/4th+Tap+Brewing+Cooperative,+Metric+Boulevard,+Austin,+TX/Circle+Brewing+Company,+West+Braker+Lane,+Austin,+TX/@30.3837216,-97.7217616,16z/data=!4m38!4m37!1m5!1m1!1s0x8644cb90029e549d:0x5486f103015519db!2m2!1d-97.7298481!2d30.3795751!1m5!1m1!1s0x8644cb8d2db1ec65:0x174d20f18188c72a!2m2!1d-97.7198803!2d30.3825245!1m5!1m1!1s0x8644c9bbdabc9217:0x375a7ed7b9b679e4!2m2!1d-97.7159854!2d30.3797278!1m5!1m1!1s0x8644cbf181e5a0cf:0x5e7458a8302bce89!2m2!1d-97.7142182!2d30.383536!1m5!1m1!1s0x8644cbf120303077:0x2354d5084cd80a4e!2m2!1d-97.7118846!2d30.3851409!1m5!1m1!1s0x8644cbf5edcd5b15:0xf674bfcaa474aa58!2m2!1d-97.7153736!2d30.3911269!3e2" ng-style='{"font-size":"40px"}'><b>Beer Map!</b></a>
+	</div>
+</div>
+
+<div class="row">{{ days[date.getDay()] }} hours:</div>
+
+<div class="row">
+	<div class="col-md-4">
+		<table class="table table-bordered table-striped table-condensed">
+			<thead>
+			<tr>
+				<td>Brewery</td>
+				<td>Open</td>
+				<td>Close</td>
+				<td>Status</td>
+			</tr>
+			</thead>
+			<tbody>
+			<tr ng-repeat="x in order" ng-class="isOpen(breweries[x])">
+				<td>{{ x }}</td>
+				<td>{{ prettyTimePrint(breweries[x][days[date.getDay()]].open) }}</td>
+				<td>{{ prettyTimePrint(breweries[x][days[date.getDay()]].close) }}</td>
+				<td ng-style="isOpen(breweries[x]) ? {'background-color': '#dff0d8'} : {'background-color': '#f2dede'}">{{ getStatus(breweries[x]) }}</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col">
+	<table class="table table-bordered table-striped table-condensed">
+		<thead>
+		<tr>
+			<td>Brewery</td>
+			<td ng-repeat="x in days">{{ x }}</td>
+		</tr>
+		</thead>
+		<tbody>
+		<tr ng-repeat="x in order">
+			<td>{{ x }}</td>
+			<td ng-repeat="y in days">{{ printTimeRange(breweries[x][y]) }}</td>
+		</tr>
+		</tbody>
+	</table>
+	</div>
+</div>
+
+<div class="row">
+	Order by:
+	<button ng-click="setOrder('Crawl')">Crawl</button>
+	<button ng-click="setOrder('Alphabetical')">Alphabetical</button>
+</div>
+
+<div class="row">
+<button ng-click="timeMode = !timeMode">Use {{ (timeMode) ? "tryhard" : "pleb" }} time</button>
+</div>
+
+</div><!-- Container -->
+</div><!-- ng-app -->
+
+
+</body>
+
+
+<script>
+var app = angular.module('beer', []);
+var parseEntries = app.controller('listCtrl', function($scope, $interval) {
+
+	tick = function() {
+		$scope.date = new Date();
+	}
+
+	tick();
+
+	$interval(tick, 1000);
+
+	$scope.days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+	// Ordered path on the map
+	$scope.crawl = ["Beerworks", "Adelbert's", "Celis", "Oskar Blues", "4th Tap", "Circle"];
+
+	// Order used in the table
+	$scope.order = $scope.crawl.concat();
+	$scope.orderMode = "Crawl";
+	$scope.orderRev = false;
+	$scope.timeMode = true;
+
+	$scope.setOrder = function(mode) {
+		$scope.orderMode = mode;
+		if (mode == "Crawl") {
+			$scope.order = $scope.crawl.concat();
+		}
+		else if (mode == "Alphabetical") {
+			$scope.order = $scope.order.sort();
+		}
+		if ($scope.orderRev) {
+			$scope.order.reverse();
+		}
+		$scope.orderRev = !$scope.orderRev;
+	}
+
+	$scope.breweries = {
+		"Celis": {
+			"Monday": {"open": -1, "close": -1},
+			"Tuesday": {"open": 15, "close": 22},
+			"Wednesday": {"open": 15, "close": 22},
+			"Thursday": {"open": 15, "close": 22},
+			"Friday": {"open": 12, "close": 22},
+			"Saturday": {"open": 12, "close": 22},
+			"Sunday": {"open": 12, "close": 22}
+		},
+		"Circle": {
+			"Monday": {"open": -1, "close": -1},
+			"Tuesday": {"open": -1, "close": -1},
+			"Wednesday": {"open": -1, "close": -1},
+			"Thursday": {"open": 17, "close": 21},
+			"Friday": {"open": 17, "close": 22},
+			"Saturday": {"open": 12, "close": 22},
+			"Sunday": {"open": 12, "close": 18}
+		},
+		"4th Tap": {
+			"Monday": {"open": 16, "close": 22},
+			"Tuesday": {"open": 16, "close": 22},
+			"Wednesday": {"open": 16, "close": 22},
+			"Thursday": {"open": 16, "close": 22},
+			"Friday": {"open": 12, "close": 00},
+			"Saturday": {"open": 12, "close": 00},
+			"Sunday": {"open": 12, "close": 22}
+		},
+		"Beerworks": {
+			"Monday": {"open": 16, "close": 22},
+			"Tuesday": {"open": 16, "close": 22},
+			"Wednesday": {"open": 16, "close": 22},
+			"Thursday": {"open": 16, "close": 22},
+			"Friday": {"open": 11, "close": 22},
+			"Saturday": {"open": 12, "close": 20},
+			"Sunday": {"open": 13, "close": 19}
+		},
+		"Adelbert's": {
+			"Monday": {"open": -1, "close": -1},
+			"Tuesday": {"open": -1, "close": -1},
+			"Wednesday": {"open": 17, "close": 22},
+			"Thursday": {"open": 17, "close": 22},
+			"Friday": {"open": 17, "close": 22},
+			"Saturday": {"open": 13, "close": 22},
+			"Sunday": {"open": 13, "close": 19}
+		},
+		"Oskar Blues": {
+			"Monday": {"open": 12, "close": 20},
+			"Tuesday": {"open": 12, "close": 22},
+			"Wednesday": {"open": 12, "close": 22},
+			"Thursday": {"open": 12, "close": 22},
+			"Friday": {"open": 12, "close": 22},
+			"Saturday": {"open": 12, "close": 22},
+			"Sunday": {"open": 12, "close": 20}
+		}
+	};
+
+	$scope.prettyTimePrint = function(hour) {
+		if (hour == 0) {
+			return ($scope.timeMode) ? "12:00 AM" : "00:00";
+		}
+		else if (hour == 12) {
+			return ($scope.timeMode) ? "12:00 PM" : "12:00";
+		}
+
+		if ($scope.timeMode) {
+			return "" + (hour % 12) + ":00 " + ((hour < 12) ? "AM" : "PM");
+		}
+		return "" + (hour) + ":00";
+
+	};
+
+	$scope.printTimeRange = function(hours) {
+		if (hours.open == -1) return "CLOSED";
+
+		return $scope.prettyTimePrint(hours.open) + " - " + $scope.prettyTimePrint(hours.close);
+	}
+
+	$scope.isOpen = function(brew) {
+		h = $scope.date.getHours();
+		hours = brew[$scope.days[$scope.date.getDay()]];
+
+		if ((h >= hours.open) && ((h < hours.close) || (hours.close == 0)) ) {
+			return true;
+		}
+		return false;
+	}
+
+	$scope.getStatus = function(brew) {
+		if ($scope.isOpen(brew)) {
+			return "OPEN";
+		}
+
+		hours = brew[$scope.days[$scope.date.getDay()]];
+
+		h = $scope.date.getHours();
+		m = $scope.date.getMinutes();
+
+		if ((hours.close != 0) && (hours.close <= h)) {
+			return "CLOSED";
+		}
+
+		return "" + (((hours.open - h - 1) * 60) + (60 - m)) + "min";
+	}
+
+});
+
+</script>
