@@ -20,7 +20,9 @@
 	</div>
 </div>
 
-<div class="row">{{ days[date.getDay()] }} hours:</div>
+<div class="row">
+	<h4>{{ days[date.getDay()] }} hours:</h4>
+</div>
 
 <div class="row">
 	<div class="col-md-4">
@@ -47,35 +49,34 @@
 
 <div class="row">
 	<div class="col">
-	<table class="table table-bordered table-striped table-condensed">
-		<thead>
-		<tr>
-			<td>Brewery</td>
-			<td ng-repeat="x in days">{{ x }}</td>
-		</tr>
-		</thead>
-		<tbody>
-		<tr ng-repeat="x in order">
-			<td>{{ x }}</td>
-			<td ng-repeat="y in days">{{ printTimeRange(breweries[x][y]) }}</td>
-		</tr>
-		</tbody>
-	</table>
+		<button type="button" class="btn btn-secondary" style="margin-bottom:5px" ng-click="timeMode = !timeMode">Use {{ (timeMode) ? "tryhard" : "pleb" }} time</button>
+		<table class="table table-bordered table-striped table-condensed">
+			<thead>
+			<tr>
+				<td>Brewery</td>
+				<td ng-repeat="x in days">{{ x }}</td>
+			</tr>
+			</thead>
+			<tbody>
+			<tr ng-repeat="x in order">
+				<td>{{ x }}</td>
+				<td ng-repeat="y in days">{{ printTimeRange(breweries[x][y]) }}</td>
+			</tr>
+			</tbody>
+		</table>
 	</div>
 </div>
 
 <div class="row">
-	Order by:
-	<button ng-click="setOrder('Crawl')">Crawl</button>
-	<button ng-click="setOrder('Alphabetical')">Alphabetical</button>
+	<p>
+		Order by:
+		<button type="button" class="btn btn-secondary" ng-click="setOrder('Crawl')">Crawl</button>
+        	<button type="button" class="btn btn-secondary" ng-click="setOrder('Alphabetical')">Alphabetical</button>
+	</p>
 </div>
 
 <div class="row">
-<button ng-click="timeMode = !timeMode">Use {{ (timeMode) ? "tryhard" : "pleb" }} time</button>
-</div>
-
-<div class="row">
-<a href="https://github.com/richteer/metric-beer">Source here!</a>
+	<button type="button" class="btn btn-success" href="https://github.com/richteer/metric-beer">Source here!</button>
 </div>
 
 </div><!-- Container -->
