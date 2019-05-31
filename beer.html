@@ -99,7 +99,7 @@ var parseEntries = app.controller('listCtrl', function($scope, $interval) {
 	$scope.days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 	// Ordered path on the map
-	$scope.crawl = ["Beerworks", "Adelbert's", "Celis", "Oskar Blues", "4th Tap", "Circle"];
+	$scope.crawl = ["Beerworks", "Adelbert's", "Celis", "Oskar Blues", "Fairweather Cider 🍎", "4th Tap", "Circle"];
 
 	// Order used in the table
 	$scope.order = $scope.crawl.concat();
@@ -144,7 +144,7 @@ var parseEntries = app.controller('listCtrl', function($scope, $interval) {
 			"Monday": {"open": 16, "close": 20},
 			"Tuesday": {"open": 16, "close": 20},
 			"Wednesday": {"open": 16, "close": 20},
-			"Thursday": {"open": 19, "close": 00},
+			"Thursday": {"open": 16, "close": 00},
 			"Friday": {"open": 12, "close": 00},
 			"Saturday": {"open": 12, "close": 00},
 			"Sunday": {"open": 16, "close": 20}
@@ -175,6 +175,15 @@ var parseEntries = app.controller('listCtrl', function($scope, $interval) {
 			"Friday": {"open": 12, "close": 22},
 			"Saturday": {"open": 12, "close": 22},
 			"Sunday": {"open": 12, "close": 20}
+		},
+		"Fairweather Cider 🍎": {
+			"Monday": {"open": -1, "close": -1},
+			"Tuesday": {"open": -1, "close": -1},
+			"Wednesday": {"open": 16, "close": 21},
+			"Thursday": {"open": 16, "close": 21},
+			"Friday": {"open": 12, "close": 23},
+			"Saturday": {"open": 12, "close": 23},
+			"Sunday": {"open": 13, "close": 19}
 		}
 	};
 
