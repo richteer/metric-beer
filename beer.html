@@ -24,7 +24,7 @@ Loading JSON data...
 Failed to get the JSON data, sorry :(
 </div>
 
-<div ng-hide="!breweries || failed">
+<div ng-if="breweries && !failed">
 <div class="row">
 	<div class="col" >
 	<a href="https://www.google.com/maps/dir/Austin+Beerworks,+Industrial+Terrace,+Austin,+TX/Adelbert's+Brewery,+Rutland+Drive,+Austin,+TX/Celis+Brewery,+Metric+Boulevard,+Austin,+TX/Oskar+Blues+Brewery+Austin,+Metric+Boulevard,+Austin,+TX/4th+Tap+Brewing+Cooperative,+Metric+Boulevard,+Austin,+TX/Circle+Brewing+Company,+West+Braker+Lane,+Austin,+TX/@30.3837216,-97.7217616,16z/data=!4m38!4m37!1m5!1m1!1s0x8644cb90029e549d:0x5486f103015519db!2m2!1d-97.7298481!2d30.3795751!1m5!1m1!1s0x8644cb8d2db1ec65:0x174d20f18188c72a!2m2!1d-97.7198803!2d30.3825245!1m5!1m1!1s0x8644c9bbdabc9217:0x375a7ed7b9b679e4!2m2!1d-97.7159854!2d30.3797278!1m5!1m1!1s0x8644cbf181e5a0cf:0x5e7458a8302bce89!2m2!1d-97.7142182!2d30.383536!1m5!1m1!1s0x8644cbf120303077:0x2354d5084cd80a4e!2m2!1d-97.7118846!2d30.3851409!1m5!1m1!1s0x8644cbf5edcd5b15:0xf674bfcaa474aa58!2m2!1d-97.7153736!2d30.3911269!3e2" ng-style='{"font-size":"40px"}'><b>Beer Map!</b></a>
@@ -45,11 +45,11 @@ Failed to get the JSON data, sorry :(
 			</tr>
 			</thead>
 			<tbody>
-			<tr ng-repeat="x in breweries" ng-class="isOpen(x)">
-				<td>{{ x.name }}</td>
-				<td>{{ prettyTimePrint(x.hours[days[date.getDay()]].open) }}</td>
-				<td>{{ prettyTimePrint(x.hours[days[date.getDay()]].close) }}</td>
-				<td ng-style="isOpen(x) ? {'background-color': '#dff0d8'} : {'background-color': '#f2dede'}">{{ getStatus(x) }}</td>
+			<tr ng-repeat="x in order" ng-class="isOpen(breweries[x])">
+				<td>{{ x }}</td>
+				<td>{{ prettyTimePrint(breweries[x][days[date.getDay()]].open) }}</td>
+				<td>{{ prettyTimePrint(breweries[x][days[date.getDay()]].close) }}</td>
+				<td ng-style="isOpen(breweries[x]) ? {'background-color': '#dff0d8'} : {'background-color': '#f2dede'}">{{ getStatus(breweries[x]) }}</td>
 			</tr>
 			</tbody>
 		</table>
@@ -66,9 +66,9 @@ Failed to get the JSON data, sorry :(
 		</tr>
 		</thead>
 		<tbody>
-		<tr ng-repeat="x in breweries">
-			<td>{{ x.name }}</td>
-			<td ng-repeat="y in days">{{ printTimeRange(x.hours[y]) }}</td>
+		<tr ng-repeat="x in order">
+			<td>{{ x }}</td>
+			<td ng-repeat="y in days">{{ printTimeRange(breweries[x][y]) }}</td>
 		</tr>
 		</tbody>
 	</table>
@@ -136,8 +136,7 @@ var parseEntries = app.controller('listCtrl', function($scope, $interval, $http)
 
 	$http.get("https://richteer.github.io/metric-beer-data/beer.json").then(
 		function(resp) {
-			console.log(resp.data);
-			$scope.breweries = resp.data.Breweries; // TODO: probably validate this first
+			$scope.breweries = resp.data;
 		},
 		function(r) {
 			console.log(r);
@@ -175,7 +174,7 @@ var parseEntries = app.controller('listCtrl', function($scope, $interval, $http)
 
 	$scope.isOpen = function(brew) {
 		h = $scope.date.getHours();
-		hours = brew.hours[$scope.days[$scope.date.getDay()]];
+		hours = brew[$scope.days[$scope.date.getDay()]];
 
 		if ((h >= hours.open) && ((h < hours.close) || (hours.close == 0)) ) {
 			return true;
@@ -188,7 +187,7 @@ var parseEntries = app.controller('listCtrl', function($scope, $interval, $http)
 			return "OPEN";
 		}
 
-		hours = brew.hours[$scope.days[$scope.date.getDay()]];
+		hours = brew[$scope.days[$scope.date.getDay()]];
 
 		h = $scope.date.getHours();
 		m = $scope.date.getMinutes();
