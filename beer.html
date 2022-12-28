@@ -24,7 +24,7 @@ Loading JSON data...
 Failed to get the JSON data, sorry :(
 </div>
 
-<div ng-if="breweries && !failed">
+<div ng-hide="!breweries || failed">
 <div class="row">
 	<div class="col" >
 	<a href="https://www.google.com/maps/dir/Austin+Beerworks,+Industrial+Terrace,+Austin,+TX/Adelbert's+Brewery,+Rutland+Drive,+Austin,+TX/Celis+Brewery,+Metric+Boulevard,+Austin,+TX/Oskar+Blues+Brewery+Austin,+Metric+Boulevard,+Austin,+TX/4th+Tap+Brewing+Cooperative,+Metric+Boulevard,+Austin,+TX/Circle+Brewing+Company,+West+Braker+Lane,+Austin,+TX/@30.3837216,-97.7217616,16z/data=!4m38!4m37!1m5!1m1!1s0x8644cb90029e549d:0x5486f103015519db!2m2!1d-97.7298481!2d30.3795751!1m5!1m1!1s0x8644cb8d2db1ec65:0x174d20f18188c72a!2m2!1d-97.7198803!2d30.3825245!1m5!1m1!1s0x8644c9bbdabc9217:0x375a7ed7b9b679e4!2m2!1d-97.7159854!2d30.3797278!1m5!1m1!1s0x8644cbf181e5a0cf:0x5e7458a8302bce89!2m2!1d-97.7142182!2d30.383536!1m5!1m1!1s0x8644cbf120303077:0x2354d5084cd80a4e!2m2!1d-97.7118846!2d30.3851409!1m5!1m1!1s0x8644cbf5edcd5b15:0xf674bfcaa474aa58!2m2!1d-97.7153736!2d30.3911269!3e2" ng-style='{"font-size":"40px"}'><b>Beer Map!</b></a>
