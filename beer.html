@@ -136,16 +136,16 @@ var parseEntries = app.controller('listCtrl', function($scope, $interval, $http)
 	$http.get("https://richteer.github.io/metric-beer-data/beer.json").then(
 		function(resp) {
 			// Probably enough to make sure the data is sane
-			if (!resp.data.Breweries) {
-				console.error("Data fetched does not seem to have the Breweries key, bailing");
+			if (!resp.data.Breweries || !resp.data.Crawl) {
+				console.error("Data fetched does not seem to have the Breweries or Crawl key, bailing");
 				$scope.failed = true;
 				return;
 			}
 
 			// Convert the new format to the old format:
 			//  "Brewery Name" -> Hours Object
-			data = resp.data.Breweries.reduce((acc, elem) => ({...acc, [elem.name]: elem.hours}), {});
-			$scope.breweries = data;
+			$scope.breweries = resp.data.Breweries.reduce((acc, elem) => ({...acc, [elem.name]: elem.hours}), {});
+			$scope.crawl = resp.data.Crawl;
 		},
 		function(r) {
 			console.log(r);
